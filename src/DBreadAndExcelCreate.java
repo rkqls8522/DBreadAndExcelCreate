@@ -1,91 +1,245 @@
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DBreadAndExcelCreate {
 
 	static void start() {
 
-		System.out.println("\n---------------\nÇØ´ç»çÇ× ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.\n"
-				+ "1. ·Î±×ÀÎÇÏ±â\n"
-				+ "2. È¸¿ø°¡ÀÔÇÏ±â\n"
-				+ "3. ¾ÆÀÌµğ Ã£±â\n"
-				+ "4. ºñ¹Ğ¹øÈ£ Ã£±â\n"
-				+ "5. È¸¿ø ¸ñ·Ï È®ÀÎ\n"
-				+ "6. ³¡³»±â");
-		
+		System.out.println("\n---------------\nÇØ´ç»çÇ× ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.\n" + "1. ·Î±×ÀÎÇÏ±â\n" + "2. È¸¿ø°¡ÀÔÇÏ±â\n" + "3. ¾ÆÀÌµğ Ã£±â\n"
+				+ "4. ºñ¹Ğ¹øÈ£ Ã£±â\n" + "5. È¸¿ø ¸ñ·Ï È®ÀÎ\n" + "6. Å»ÅğÇÏ±â\n" + "7. ³¡³»±â");
+
 		Scanner sc = new Scanner(System.in);
 		int num = sc.nextInt();
-		
+
 		System.out.println("\n---------------\n");
-		switch(num) {
-		case 1 : login();break;
-		case 2 : join();break;
-		case 3 : find_id();break;
-		case 4 : find_password();break;
-		case 5 : check_user();break;
-		case 6 : System.out.println("¾È³çÈ÷ °¡¼¼¿ä.");break;
-		default : System.out.println("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù."); break;
+		switch (num) {
+		case 1:
+			login();
+			break;
+		case 2:
+			join();
+			break;
+		case 3:
+			find_id();
+			break;
+		case 4:
+			find_password();
+			break;
+		case 5:
+			check_user();
+			break;
+		case 6:
+			delete_user();
+			break;
+		case 7:
+			System.out.println("¾È³çÈ÷ °¡¼¼¿ä.");
+			break;
+		default:
+			System.out.println("Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù.");
+			break;
 		}
-		
-		if(num !=6)	start();	
-		
-		
-		
-		
-		
-		
+
+		if (num != 7) {
+			System.out.println("\n´õ ¿øÇÏ½Ã´Â ÀÏÀÌ ÀÖ½À´Ï±î?");
+			start();
+		}
+
 	}
-	
-	
-	
-	
+
 	public static void login() {
+		DB db = new DB();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
-		String id = sc.next();
+		String id = sc.nextLine();
+		System.out.println("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+		String password = sc.nextLine();
+
+		if (db.check_login(id, password) == "true")
+			System.out.println("·Î±×ÀÎ ¼º°ø");
+		else
+			System.out.println("·Î±×ÀÎ ½ÇÆĞ");
+
 	}
-	
+
 	public static void join() {
+		DB db = new DB();
 		Scanner sc = new Scanner(System.in);
-		System.out.println("È¸¿ø°¡ÀÔÇÏ±â");
+		String idPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+		String pwPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$";
+		String namePattern = "[A-Za-z]*$";
+		String agePattern = "[0-9]*$";
+		String NumberPattern = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$";
+		String e_mailPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,6}$";
+		String jusoPattern = "[A-Za-z0-9°¡-ÆR ]*$";
+
+		String id, password, name, sex, age, juso, number, e_mail;
+		while (true) {
+			System.out.println("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+			System.out.println("¿µ¹®ÀÚ¿Í ¼ıÀÚ¸¦ Æ÷ÇÔÇÏ¿© 8~12ÀÚ¸®·Î ÀÔ·ÂÇÏ¼¼¿ä.");
+			id = sc.nextLine();
+			Matcher matId = Pattern.compile(idPattern).matcher(id);
+			if (matId.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else if (db.check_id(id) == "true")
+				System.out.println("ÀÌ¹Ì ÀÖ´Â ¾ÆÀÌµğÀÔ´Ï´Ù.");
+			else if (id.contains(" "))
+				System.out.println("°ø¹éÀÌ ÀÖÀ¸¸é ¾È µË´Ï´Ù.");
+			else
+				break;
+		}
+		while (true) {
+			System.out.println("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+			System.out.println("¿µ¹®ÀÚ¿Í ¼ıÀÚ¸¦ Æ÷ÇÔÇÏ¿© 8~12ÀÚ¸®·Î ÀÔ·ÂÇÏ¼¼¿ä.");
+			password = sc.nextLine();
+			String checkString="";
+			int sum = 0;
+			for(int i = 0; i < id.length() - 2; i++) {
+				checkString = id.substring(i,i+3);
+				if(password.contains(checkString))
+					sum++;
+			}
+			Matcher matPassword = Pattern.compile(pwPattern).matcher(password);
+			if (matPassword.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else if (id.contains(" "))
+				System.out.println("°ø¹éÀÌ ÀÖÀ¸¸é ¾È µË´Ï´Ù.");
+			else if(sum > 0)
+				System.out.println("¾ÆÀÌµğ¿Í µ¿ÀÏÇÑ ¿µ¹®ÀÚ³ª ¼ıÀÚ³ª 3ÀÚ¸® ÀÌ»ó ¿¬¼ÓÀ¸·Î ÀÖÀ¸¸é ¾È µË´Ï´Ù.");
+			else
+				break;
+		}
+		while (true) {
+			System.out.println("ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä.");
+			System.out.println("¿µ¹®ÀÚ·Î¸¸ ÀÔ·ÂÇÏ¼¼¿ä.");
+			name = sc.nextLine();
+			Matcher matname = Pattern.compile(namePattern).matcher(name);
+			if (matname.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else
+				break;
+		}
+		target: while (true) {
+			System.out.println("¼ºº°À» ÀÔ·ÂÇÏ¼¼¿ä(1~2).\n" + "1. male\n" + "2. female");
+			String num = sc.nextLine();
+			switch (num) {
+			case "1":
+				sex = "male";
+				break target;
+			case "2":
+				sex = "female";
+				break target;
+			default:
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			}
+
+		}
+		while (true) {
+			System.out.println("³ªÀÌ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+			age = sc.nextLine();
+			Matcher matage = Pattern.compile(agePattern).matcher(age);
+			if (matage.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else
+				break;
+		}
+		while (true) {
+			System.out.println("ÁÖ¼Ò¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+			juso = sc.nextLine();
+			Matcher matjuso = Pattern.compile(jusoPattern).matcher(juso);
+			if (matjuso.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else
+				break;
+		}
+
+		while (true) {
+			System.out.println("ÈŞ´ëÀüÈ­¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.\n" + "¶ç¾î¾²±â ¾øÀÌ '-'¸¦ Æ÷ÇÔÇÏ°í ÀÔ·ÂÇÏ¼¼¿ä.");
+			number = sc.nextLine();
+			Matcher matnumber = Pattern.compile(NumberPattern).matcher(number);
+			if (matnumber.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else
+				break;
+		}
+		while (true) {
+			System.out.println("ÀÌ¸ŞÀÏÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
+			e_mail = sc.nextLine();
+			Matcher matE_mail = Pattern.compile(e_mailPattern).matcher(e_mail);
+			if (matE_mail.matches() == false)
+				System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+			else
+				break;
+		}
+
+		db.insert(id, password, name, sex, age, juso, number, e_mail);
+		System.out.println("°¡ÀÔÀ» ¿Ï·áÇß½À´Ï´Ù.");
+		db.writeExcel();
 	}
-	
+
 	public static void find_id() {
+		DB db = new DB();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä.");
-		String name = sc.next();
-		
-		DB db = new DB();
-		
-		String matName = db.find_id(name);
-		
-		if(matName == true)
+		String name = sc.nextLine();
+		String matId = db.find_id(name);
+		System.out.println("ID : " + matId);
+
 	}
-	
+
 	public static void find_password() {
+		DB db = new DB();
 		Scanner sc = new Scanner(System.in);
-		System.out.println("ºñ¹Ğ¹øÈ£ Ã£±â");
+		System.out.println("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+		String id = sc.nextLine();
+
+		System.out.println("ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä.");
+		String name = sc.nextLine();
+
+		String matPassword = db.find_password(id, name);
+		System.out.println("PASSWORD : " + matPassword);
+
 	}
-	
+
 	public static void check_user() {
+		DB db = new DB();
 		Scanner sc = new Scanner(System.in);
-		System.out.println("È¸¿ø ¸ñ·Ï È®ÀÎ");
+		System.out.println("È¸¿ø ¸ñ·ÏÀ» Ãâ·ÂÇÕ´Ï´Ù.");
+		db.read();
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public static void delete_user() {
+		DB db = new DB();
+		Scanner sc = new Scanner(System.in);
+		System.out.println("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+		String id = sc.nextLine();
+		if (db.check_id(id) == "true") {
+			target: while (true) {
+				System.out.println("Á¤¸»·Î Å»ÅğÇÏ½Ã°Ú½À´Ï±î? (1~2)\n" + "1. yes\n" + "2. no");
+				String answer = sc.nextLine();
+				switch (answer) {
+				case "1":
+					db.delete(id);
+					System.out.println("Å»Åğ¸¦ ¿Ï·áÇß½À´Ï´Ù.");
+					db.writeExcel();
+					break target;
+				case "2":
+					break target;
+				default:
+					System.out.println("´Ù½Ã ÀÔ·ÂÇÏ¼¼¿ä.");
+				}
+			}
+		} else
+			System.out.println("ÇØ´ç ¾ÆÀÌµğ°¡ ¾ø½À´Ï´Ù.");
+		
+	}
+
 	public static void main(String[] args) {
 
 		System.out.println("Å×½ºÆ®¸¦ ½ÃÀÛÇÕ´Ï´Ù.");
 		start();
-		
+
 	}
 
 }
-
-
