@@ -1,3 +1,4 @@
+package DBAndExcelData;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,23 +25,15 @@ public class Excel {
 		XSSFCell xssfCell;
 
 		try {
-			int rowNo = 0; // 행 갯수
 			// 워크북 생성
 			xssfWb = new XSSFWorkbook();
-			xssfSheet = xssfWb.createSheet("엑셀 테스트"); // 워크시트 이름
-			
-			//행의 개수 구하기
-			FileInputStream fis = new FileInputStream("D:\\노가빈\\userlist.xlsx");
-			XSSFWorkbook workbook = new XSSFWorkbook(fis);
-			XSSFSheet sheet = workbook.getSheetAt(0); // 해당 엑셀파일의 시트(Sheet) 수
-			int rows = sheet.getPhysicalNumberOfRows(); // 해당 시트의 행의 개수
-
+			xssfSheet = xssfWb.createSheet("유저리스트"); // 워크시트 이름
 			// 셀병합
 			xssfSheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7)); // 첫행, 마지막행, 첫열, 마지막열  (0번째 행의 0~4번째 컬럼을 병합한다)
 			// 타이틀 생성
 			xssfRow = xssfSheet.createRow(0); // 행 객체 추가
 			xssfCell = xssfRow.createCell((short) 0); // 추가한 행에 셀 객체 추가
-			xssfCell.setCellValue("여자 회원 목록입니다."); // 데이터 입력
+			xssfCell.setCellValue("회원 목록입니다."); // 데이터 입력
 
 			for (int i = 0; i < 8; i++) {
 				// 넓이 정하기
@@ -64,7 +57,7 @@ public class Excel {
 			xssfCell = xssfRow.createCell((short) 5);
 			xssfCell.setCellValue("juso");
 			xssfCell = xssfRow.createCell((short) 6);
-			xssfCell.setCellValue("nubmer");
+			xssfCell.setCellValue("number");
 			xssfCell = xssfRow.createCell((short) 7);
 			xssfCell.setCellValue("e_mail");
 			

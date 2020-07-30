@@ -1,3 +1,4 @@
+package DBAndExcelData;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -5,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DB {
-	String url = "jdbc:mysql://127.0.0.1:3306/dbtest?useSSL=false&user=root&password=1234&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
+	static final String url = "jdbc:mysql://127.0.0.1:3306/dbtest?useSSL=false&user=root&password=1234&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
 	Connection conn = null;
 	ResultSet rs = null;
 
@@ -42,8 +43,8 @@ public class DB {
 			rs = st.executeQuery(qu);
 
 			System.out.println(
-					"id                  password            name                sex                 age                 juso\n"
-							+ "-----------------------------------------------------------------------------------------------------------------------------------------");
+					"id                  password            name                sex            age       number              e_mail                   juso\n"
+							+ "---------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 			// 각 열을 반복적으로 나타내줌
 			while (rs.next()) {
 				String id = rs.getString("id");
@@ -52,7 +53,9 @@ public class DB {
 				String sex = rs.getString("sex");
 				String age = rs.getString("age");
 				String juso = rs.getString("juso");
-				System.out.format("%-20s%-20s%-20s%-20s%-20s%s\n", id, password, name, sex, age, juso);
+				String number = rs.getString("number");
+				String e_mail = rs.getString("e_mail");
+				System.out.format("%-20s%-20s%-20s%-15s%-10s%-20s%-25s%s\n", id, password, name, sex, age,number,e_mail, juso);
 			}
 			st.close();
 
@@ -120,7 +123,7 @@ public class DB {
 	}
 
 	String find_id(String name) {
-
+		String id="";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
@@ -128,11 +131,9 @@ public class DB {
 			String qu = "select id from dbtest.usertest where name = '" + name + "';";
 
 			rs = st.executeQuery(qu);
-			String id;
 			if (rs.next()) {
 				id = rs.getString("id");
 				st.close();
-				return id;
 			} else {
 				return "해당 아이디를 찾을 수 없습니다.";
 			}
@@ -148,11 +149,11 @@ public class DB {
 				} catch (SQLException conne) {
 				}
 		}
-		return "";
+		return id;
 	}
 
-	String check_id(String id) {
-
+	boolean check_id(String id) {
+		boolean getId=false;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
@@ -160,10 +161,8 @@ public class DB {
 			String qu = "select id from dbtest.usertest where id = '" + id + "';";
 
 			rs = st.executeQuery(qu);
-
-			String getId = String.valueOf(rs.next());
+			getId = rs.next();
 			st.close();
-			return getId;
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -176,11 +175,11 @@ public class DB {
 				} catch (SQLException conne) {
 				}
 		}
-		return "";
+		return getId;
 	}
 
 	String find_password(String id, String name) {
-
+		String password="";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
@@ -189,11 +188,9 @@ public class DB {
 
 			rs = st.executeQuery(qu);
 
-			String password;
 			if (rs.next()) {
 				password = rs.getString("password");
 				st.close();
-				return password;
 			} else {
 				return "해당 비밀번호를 찾을 수 없습니다.";
 			}
@@ -209,11 +206,11 @@ public class DB {
 				} catch (SQLException conne) {
 				}
 		}
-		return "";
+		return password;
 	}
 
-	String check_login(String id, String password) {
-
+	boolean check_login(String id, String password) {
+		boolean checkValue=false;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
@@ -222,10 +219,8 @@ public class DB {
 
 			rs = st.executeQuery(qu);
 
-			String checkValue = String.valueOf(rs.next());
-
+			checkValue = rs.next();
 			st.close();
-			return checkValue;
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -238,7 +233,7 @@ public class DB {
 				} catch (SQLException conne) {
 				}
 		}
-		return "";
+		return checkValue;
 	}
 
 	void writeExcel() {
@@ -254,6 +249,8 @@ public class DB {
 			// 엑셀 클래스 부르기
 			Excel excel = new Excel();
 
+			excel.create();
+			int i = 2;
 			while (rs.next()) {
 				String id = rs.getString("id");
 				String password = rs.getString("password");
@@ -265,9 +262,7 @@ public class DB {
 				String e_mail = rs.getString("e_mail");
 				
 				//엑셀파일생성
-				excel.create();
 				//수정모드. 값 넣기
-				int i = 2;
 				excel.insert(id, password, name, sex, age, juso,number,e_mail,i);
 				i++;
 			}
