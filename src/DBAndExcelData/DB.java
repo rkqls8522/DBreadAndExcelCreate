@@ -10,26 +10,26 @@ public class DB {
 	Connection conn = null;
 	ResultSet rs = null;
 
-	void connection() {
-
-		// 드라이버 로드
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection(url); // 커넥션 생성
-			System.out.println("Database connection OK!");
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException se) {
-			se.printStackTrace();
-		} finally {
-			if (conn != null)
-				try {
-					conn.close();
-				} catch (SQLException conne) {
-				}
-		}
-	}
+//	void connection() {
+//
+//		// 드라이버 로드
+//		try {
+//			Class.forName("com.mysql.cj.jdbc.Driver");
+//			conn = DriverManager.getConnection(url); // 커넥션 생성
+//			System.out.println("Database connection OK!");
+//
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (SQLException se) {
+//			se.printStackTrace();
+//		} finally {
+//			if (conn != null)
+//				try {
+//					conn.close();
+//				} catch (SQLException conne) {
+//				}
+//		}
+//	}
 
 	void read() {
 
@@ -248,7 +248,7 @@ public class DB {
 
 			// 엑셀 클래스 부르기
 			Excel excel = new Excel();
-
+			//파일 생성
 			excel.create();
 			int i = 2;
 			while (rs.next()) {
@@ -261,7 +261,6 @@ public class DB {
 				String number = rs.getString("number");
 				String e_mail = rs.getString("e_mail");
 				
-				//엑셀파일생성
 				//수정모드. 값 넣기
 				excel.insert(id, password, name, sex, age, juso,number,e_mail,i);
 				i++;

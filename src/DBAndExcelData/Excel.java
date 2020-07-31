@@ -4,25 +4,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Excel {
+	XSSFWorkbook xssfWb;
+	XSSFSheet xssfSheet;
+	XSSFRow xssfRow;
+	XSSFCell xssfCell;
 
 	void create() {
 
-		XSSFWorkbook xssfWb;
-		XSSFSheet xssfSheet;
-		XSSFRow xssfRow;
-		XSSFCell xssfCell;
 
 		try {
 			// 워크북 생성
@@ -76,14 +72,16 @@ public class Excel {
 			e.printStackTrace();
 		}
 	}
-
+	FileInputStream fis;
+	XSSFWorkbook workbook;
+	XSSFSheet sheet; // 해당 엑셀파일의 시트(Sheet) 수
 	void insert(String id, String password, String name, String sex, String age, String juso, String number, String e_mail,int num) {
 		
 		try {
 			//파일읽기
-			InputStream inp = new FileInputStream("D:\\노가빈\\userlist.xlsx");
-			Workbook wb = WorkbookFactory.create(inp);
-			Sheet sheet = wb.getSheetAt(0);
+			fis = new FileInputStream("D:\\노가빈\\userlist.xlsx");
+			workbook = new XSSFWorkbook(fis);
+			sheet = workbook.getSheetAt(0);
 			sheet.createRow(num);
 			Row row = sheet.getRow(num);
 			
@@ -98,7 +96,7 @@ public class Excel {
 			row.createCell(7).setCellValue(e_mail);
 
 			FileOutputStream fileOut = new FileOutputStream("D:\\노가빈\\userlist.xlsx");
-			wb.write(fileOut);
+			workbook.write(fileOut);
 			fileOut.close();
 			
 		} catch (Exception e) {
@@ -112,9 +110,9 @@ public class Excel {
 	void read() {
 
 		try {
-			FileInputStream fis = new FileInputStream("D:\\노가빈\\userlist.xlsx");
-			XSSFWorkbook workbook = new XSSFWorkbook(fis);
-			XSSFSheet sheet = workbook.getSheetAt(0); // 해당 엑셀파일의 시트(Sheet) 수
+			fis = new FileInputStream("D:\\노가빈\\userlist.xlsx");
+			workbook = new XSSFWorkbook(fis);
+			sheet = workbook.getSheetAt(0); // 해당 엑셀파일의 시트(Sheet) 수
 			int rows = sheet.getPhysicalNumberOfRows(); // 해당 시트의 행의 개수
 			for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
 				XSSFRow row = sheet.getRow(rowIndex); // 각 행을 읽어온다

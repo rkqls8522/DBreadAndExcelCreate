@@ -20,37 +20,38 @@ public class DBreadAndExcelCreate {
 				+ "4. 비밀번호 찾기\n" + "5. 회원 목록 확인\n" + "6. 탈퇴하기\n" + "7. 끝내기");
 
 		Scanner sc = new Scanner(System.in);
-		int num = sc.nextInt();
-
+		boolean breakNum = true;
+		String num = sc.nextLine();
 		System.out.println("\n---------------\n");
 		switch (num) {
-		case 1:
+		case "1":
 			login();
 			break;
-		case 2:
+		case "2":
 			join();
 			break;
-		case 3:
+		case "3":
 			find_id();
 			break;
-		case 4:
+		case "4":
 			find_password();
 			break;
-		case 5:
+		case "5":
 			check_user();
 			break;
-		case 6:
+		case "6":
 			delete_user();
 			break;
-		case 7:
+		case "7":
 			System.out.println("안녕히 가세요.");
+			breakNum = false;
 			break;
 		default:
 			System.out.println("잘못 입력하셨습니다.");
 			break;
 		}
 
-		if (num != 7) {
+		if (breakNum) {
 			System.out.println("\n더 원하시는 일이 있습니까?");
 			start();
 		}
@@ -75,7 +76,7 @@ public class DBreadAndExcelCreate {
 		String id, password, name, sex, age, juso, number, e_mail;
 		while (true) {
 			System.out.println("아이디를 입력하세요.");
-			System.out.println("영문자와 숫자를 포함하여 8~12자리로 입력하세요.");
+			System.out.println("영문자와 숫자를 포함하여 8~12자리로 입력하세요. 공백은 안 됩니다.");
 			id = sc.nextLine();
 			matId = Pattern.compile(idPattern).matcher(id);
 			if (matId.matches() == false)
@@ -89,7 +90,7 @@ public class DBreadAndExcelCreate {
 		}
 		while (true) {
 			System.out.println("비밀번호를 입력하세요.");
-			System.out.println("영문자와 숫자와 특수문자를 포함하여 8~12자리로 입력하세요.");
+			System.out.println("영문자와 숫자와 특수문자를 포함하여 8~12자리로 입력하세요. 공백은 안 됩니다.");
 			password = sc.nextLine();
 			String checkString="";
 			int sum = 0;
@@ -153,7 +154,7 @@ public class DBreadAndExcelCreate {
 		}
 
 		while (true) {
-			System.out.println("휴대전화번호를 입력하세요.\n" + "띄어쓰기 없이 '-'를 포함하고 입력하세요.");
+			System.out.println("휴대전화번호를 입력하세요.\n" + "공백 없이 '-'를 포함하고 입력하세요.");
 			number = sc.nextLine();
 			matnumber = Pattern.compile(NumberPattern).matcher(number);
 			if (matnumber.matches() == false)
