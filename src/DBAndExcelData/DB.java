@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 public class DB {
 	static final String url = "jdbc:mysql://127.0.0.1:3306/dbtest?useSSL=false&user=root&password=1234&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
+	// 커넥션 생성 전, 정의 먼저 깔끔하게 해주기
 	Connection conn = null;
 	ResultSet rs = null;
 
@@ -34,7 +35,6 @@ public class DB {
 	void read() {
 
 		try {
-			// 커넥션 생성 전, 정의 먼저 깔끔하게 해주기
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url);
 			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
